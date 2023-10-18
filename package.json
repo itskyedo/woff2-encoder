@@ -1,0 +1,78 @@
+{
+  "name": "woff2-encoder",
+  "version": "1.0.1",
+  "description": "A TypeScript library for handling WOFF2 encoding using WebAssembly",
+  "author": "Kyedo",
+  "license": "MIT",
+  "homepage": "https://github.com/itskyedo/woff2-encoder#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itskyedo/woff2-encoder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/itskyedo/woff2-encoder/issues"
+  },
+  "keywords": [
+    "woff2",
+    "ttf",
+    "otf",
+    "sfnt",
+    "compress",
+    "convert",
+    "encode",
+    "esm"
+  ],
+  "scripts": {
+    "prepare": "npx husky install",
+    "format": "prettier --write .",
+    "lint": "eslint --quiet .",
+    "typecheck": "tsc --noEmit",
+    "codecheck": "prettier --check . && npm run lint && npm run typecheck",
+    "test": "vitest --watch=false",
+    "build:wasm": "docker build --platform linux/amd64 -t woff2-encoder . && docker run --platform linux/amd64 --rm -v $(pwd):/src/woff2-encoder -u $(id -u):$(id -g) -it woff2-encoder make -C /src/woff2-encoder",
+    "build": "rimraf dist && parcel build --no-cache --no-source-maps"
+  },
+  "type": "module",
+  "source": "src/index.ts",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "targets": {
+    "module": {
+      "outputFormat": "esmodule",
+      "isLibrary": true,
+      "optimize": true,
+      "sourceMap": false,
+      "includeNodeModules": false
+    }
+  },
+  "engines": {
+    "node": ">= 16.x"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@commitlint/cli": "^17.7.2",
+    "@commitlint/config-conventional": "^17.7.0",
+    "@parcel/packager-ts": "^2.9.3",
+    "@parcel/transformer-typescript-types": "^2.9.3",
+    "@shopify/eslint-plugin": "^43.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "@vitest/coverage-v8": "^0.34.6",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-jsdoc": "^46.8.2",
+    "eslint-plugin-sort-export-all": "^1.4.1",
+    "lint-staged": "^14.0.1",
+    "parcel": "^2.9.3",
+    "prettier": "^3.0.3",
+    "prettier-plugin-jsdoc": "^1.0.4",
+    "rimraf": "^5.0.5",
+    "typescript": "^4.7.4",
+    "vitest": "^0.34.6"
+  }
+}

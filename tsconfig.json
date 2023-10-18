@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "lib": ["es2022"],
+    "target": "es2017",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "newLine": "lf",
+    "strict": true,
+    "stripInternal": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "resolveJsonModule": true,
+    "pretty": true,
+    "sourceMap": false,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true
+  }
+}

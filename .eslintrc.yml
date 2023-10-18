@@ -1,0 +1,82 @@
+plugins:
+  - 'jsdoc'
+  - 'sort-export-all'
+  - '@typescript-eslint/eslint-plugin'
+
+ignorePatterns:
+  - 'node_modules/**/*'
+  - 'dist/**/*'
+  - 'build/**/*'
+  - 'coverage/**/*'
+
+extends:
+  - 'eslint:recommended'
+  - 'plugin:@typescript-eslint/recommended'
+  - 'plugin:@shopify/esnext'
+  - 'plugin:@shopify/typescript'
+  - 'plugin:@shopify/typescript-type-checking'
+  - 'plugin:@shopify/prettier'
+  - 'prettier'
+
+parser: '@typescript-eslint/parser'
+
+parserOptions:
+  project: 'tsconfig.json'
+  ecmaVersion: esnext
+  sourceType: 'module'
+  extraFileExtensions:
+    - .md
+    - .json
+    - .jsonc
+
+rules:
+  # @shopify/typescript
+  '@shopify/typescript/prefer-pascal-case-enums': 0
+
+  # @typescript-eslint
+  '@typescript-eslint/consistent-type-imports':
+    - 'error'
+    - prefer: 'type-imports'
+      fixStyle: 'inline-type-imports'
+
+  # eslint
+  'id-length': 0
+  'line-comment-position': 0
+  'no-console': 0
+  'sort-imports':
+    - 'error'
+    - ignoreDeclarationSort: true
+      allowSeparatedGroups: true
+
+  #
+  # import
+  #
+  'import/order':
+    - 'error'
+    - groups:
+        - 'builtin'
+        - 'external'
+        - 'internal'
+        - 'parent'
+        - 'sibling'
+      alphabetize:
+        order: 'asc'
+        caseInsensitive: false
+      'newlines-between': 'always'
+
+  #
+  # jsdoc
+  #
+  'jsdoc/require-hyphen-before-param-description':
+    - 'error'
+    - 'never'
+  'jsdoc/tag-lines':
+    - 'error'
+    - 'always'
+    - count: 0
+      startLines: 1
+
+  #
+  # sort-export-all
+  #
+  'sort-export-all/sort-export-all': 'error'

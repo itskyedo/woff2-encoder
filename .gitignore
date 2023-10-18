@@ -1,0 +1,24 @@
+# os
+.DS_Store
+.Spotlight-V100
+.Trashes
+thumbs.db
+Thumbs.db
+
+# ide
+.vscode
+.idea
+*.code-workspace
+*.sublime-workspace
+
+# project
+node_modules
+.env
+*.log*
+dist
+coverage
+.tsbuildinfo
+.parcel-cache
+.eslintcache
+.jest-cache
+TODO.md
