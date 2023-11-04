@@ -1,6 +1,6 @@
 # woff2-encoder
 
-A TypeScript library for handling [WOFF2](https://github.com/google/woff2) encoding using WebAssembly.
+A TypeScript library for handling WOFF2 encoding using WebAssembly.
 
 ---
 
@@ -70,7 +70,7 @@ async function example() {
 }
 ```
 
-### Parse a WOFF2 font with opentype.js
+### Parse a WOFF2 font with [opentype.js](https://github.com/opentypejs/opentype.js)
 
 ```typescript
 import fs from 'node:fs';
@@ -89,7 +89,7 @@ async function example() {
 
 ---
 
-## 🙏 Special Thanks
+## ⭐ Acknowledgements
 
 - [google/woff2](https://github.com/google/woff2) - For the C++ implemention for encoding WOFF2 files.
 - [fontello/wawoff2](https://github.com/fontello/wawoff2) - For the initial WebAssembly port of Google's WOFF2 encoder.

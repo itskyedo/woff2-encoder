@@ -2,7 +2,7 @@
   Copyright 2013 Google Inc. All Rights Reserved.
 
   Distributed under MIT license.
-  See file LICENSE-THIRD-PARTY for detail or copy at https://opensource.org/licenses/MIT
+  https://github.com/google/woff2/blob/master/LICENSE
 */
 
 #include <woff2/decode.h>
