@@ -15,6 +15,7 @@ extends:
   - 'plugin:@shopify/esnext'
   - 'plugin:@shopify/typescript'
   - 'plugin:@shopify/typescript-type-checking'
+  - 'plugin:jsdoc/recommended-typescript-error'
   - 'plugin:@shopify/prettier'
   - 'prettier'
 
