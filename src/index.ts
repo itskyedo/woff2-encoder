@@ -1,23 +1,26 @@
 import initModule from '../build/woff2-wasm';
 
-const _module = initModule();
-let _woff2: Awaited<ReturnType<typeof initModule>>;
-
-_loadModule();
+const _module = new Promise<ReturnType<typeof initModule>>((resolve) => {
+  initModule({
+    onRuntimeInitialized() {
+      resolve(this as ReturnType<typeof initModule>);
+    },
+  });
+});
 
 /**
  * Asynchronously loads the WOFF2 module.
  *
+ * @returns A promise resolving to the WOFF2 module.
  * @internal
  */
-async function _loadModule(): Promise<void> {
-  if (!(_woff2 as typeof _woff2 | undefined)) {
-    const loadedModule = await _module;
-
-    if (!(_woff2 as typeof _woff2 | undefined)) {
-      _woff2 = loadedModule;
-    }
-  }
+async function loadModule(): typeof _module {
+  const loadedModule = await _module;
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(loadedModule);
+    }, 0);
+  });
 }
 
 /**
@@ -29,9 +32,8 @@ async function _loadModule(): Promise<void> {
 export async function compress(
   buffer: ArrayBuffer | Uint8Array
 ): Promise<Uint8Array> {
-  await _loadModule();
-
-  const result = await _woff2.compress(buffer);
+  const encoder = await loadModule();
+  const result = await encoder.compress(buffer);
   if (!result) {
     throw new Error('Failed to compress the font data!');
   }
@@ -48,9 +50,8 @@ export async function compress(
 export async function decompress(
   buffer: ArrayBuffer | Uint8Array
 ): Promise<Uint8Array> {
-  await _loadModule();
-
-  const result = await _woff2.decompress(buffer);
+  const encoder = await loadModule();
+  const result = await encoder.decompress(buffer);
   if (!result) {
     throw new Error('Failed to decompress the font data!');
   }
