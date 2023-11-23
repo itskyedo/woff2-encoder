@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/itskyedo/woff2-encoder/compare/v1.0.2...v1.0.3) (2023-11-23)
+
+
+### Bug Fixes
+
+* load module on onRuntimeInitialized event ([#6](https://github.com/itskyedo/woff2-encoder/issues/6)) ([91ef55f](https://github.com/itskyedo/woff2-encoder/commit/91ef55f60d0ef09ca5f60dc6ce3160ad47a44115))
+
 ## [1.0.2](https://github.com/itskyedo/woff2-encoder/compare/v1.0.1...v1.0.2) (2023-11-04)
 
 
