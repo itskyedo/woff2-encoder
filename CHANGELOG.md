@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/itskyedo/woff2-encoder/compare/v1.0.3...v1.1.0) (2024-07-25)
+
+
+### Features
+
+* create separate decompress wasm function ([#16](https://github.com/itskyedo/woff2-encoder/issues/16)) ([f0735f6](https://github.com/itskyedo/woff2-encoder/commit/f0735f6fe55f2093286c195cf488fdf5e796ce2b))
+
 ## [1.0.3](https://github.com/itskyedo/woff2-encoder/compare/v1.0.2...v1.0.3) (2023-11-23)
 
 
