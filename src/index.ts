@@ -1,12 +1,14 @@
 import initModule from '../build/woff2-wasm';
 
-const _module = new Promise<ReturnType<typeof initModule>>((resolve) => {
-  initModule({
-    onRuntimeInitialized() {
-      resolve(this as ReturnType<typeof initModule>);
-    },
-  });
-});
+const _module = new Promise<Awaited<ReturnType<typeof initModule>>>(
+  (resolve) => {
+    initModule({
+      onRuntimeInitialized() {
+        resolve(this as ReturnType<typeof initModule>);
+      },
+    });
+  }
+);
 
 /**
  * Asynchronously loads the WOFF2 module.
@@ -14,7 +16,7 @@ const _module = new Promise<ReturnType<typeof initModule>>((resolve) => {
  * @returns A promise resolving to the WOFF2 module.
  * @internal
  */
-async function loadModule(): typeof _module {
+async function loadModule(): Promise<Awaited<typeof _module>> {
   const loadedModule = await _module;
   return new Promise((resolve) => {
     setTimeout(() => {
