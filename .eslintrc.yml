@@ -23,7 +23,7 @@ parser: '@typescript-eslint/parser'
 
 parserOptions:
   project: 'tsconfig.json'
-  ecmaVersion: esnext
+  ecmaVersion: latest
   sourceType: 'module'
   extraFileExtensions:
     - .md

@@ -18,6 +18,13 @@ npm install woff2-encoder
 
 ---
 
+## Notes
+
+If you only need to decompress WOFF2 files, it's recommended that you import
+from `woff2-encoder/decompress` (see the [Decompress only](#decompress-only)
+example below). This will net your end users a significant decrease in bundle
+size as it uses its own separate WASM file with a much smaller footprint.
+
 ## 📚 API Reference
 
 ### `compress`
@@ -51,7 +58,7 @@ import fs from 'node:fs';
 import { compress } from 'woff2-encoder';
 
 async function example() {
-  const fontFile = fs.readFileSync('./myFont.ttf');
+  const fontFile = fs.readFileSync('./my-font.ttf');
   const output = await compress(fontFile);
 }
 ```
@@ -62,7 +69,7 @@ async function example() {
 import { decompress } from 'woff2-encoder';
 
 async function example() {
-  const fontBuffer = await fetch('https://example.com/myFont.woff2').then(
+  const fontBuffer = await fetch('https://example.com/my-font.woff2').then(
     (res) => res.arrayBuffer()
   );
 
@@ -78,12 +85,28 @@ import opentype from 'opentype.js';
 import { decompress } from 'woff2-encoder';
 
 async function example() {
-  const fontFile = fs.readFileSync('./myFont.woff2');
+  const fontFile = fs.readFileSync('./my-font.woff2');
   const output = await decompress(fontFile);
 
   // Since opentype.js requires a buffer, we pass
   // in the buffer and not the byte array itself
   const fontData = opentype.parse(output.buffer);
+}
+```
+
+### Decompress only
+
+```typescript
+import fs from 'node:fs';
+import opentype from 'opentype.js';
+import decompress from 'woff2-encoder/decompress';
+
+async function example() {
+  const fontBuffer = await fetch('https://example.com/my-font.woff2').then(
+    (res) => res.arrayBuffer()
+  );
+
+  const output = await decompress(fontBuffer);
 }
 ```
 
