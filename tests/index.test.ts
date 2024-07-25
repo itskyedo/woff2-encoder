@@ -4,6 +4,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 import { compress, decompress } from '../src';
+import decompress2 from '../src/decompress';
 
 const fixturesPath = path.join(__dirname, 'fixtures');
 
@@ -40,24 +41,30 @@ describe('decompress', () => {
     const target = fs.readFileSync(path.join(fixturesPath, 'dec-woff2.ttf'));
     const input = fs.readFileSync(path.join(fixturesPath, 'og.woff2'));
     const output = await decompress(input);
+    const output2 = await decompress2(input);
 
     expect(Buffer.compare(target, output)).toStrictEqual(0);
+    expect(Buffer.compare(target, output2)).toStrictEqual(0);
   });
 
   it('decompresses compressed TTF', async () => {
     const target = fs.readFileSync(path.join(fixturesPath, 'dec-enc-ttf.ttf'));
     const input = fs.readFileSync(path.join(fixturesPath, 'enc-ttf.woff2'));
     const output = await decompress(input);
+    const output2 = await decompress2(input);
 
     expect(Buffer.compare(target, output)).toStrictEqual(0);
+    expect(Buffer.compare(target, output2)).toStrictEqual(0);
   });
 
   it('decompresses compressed OTF', async () => {
     const target = fs.readFileSync(path.join(fixturesPath, 'dec-enc-otf.otf'));
     const input = fs.readFileSync(path.join(fixturesPath, 'enc-otf.woff2'));
     const output = await decompress(input);
+    const output2 = await decompress2(input);
 
     expect(Buffer.compare(target, output)).toStrictEqual(0);
+    expect(Buffer.compare(target, output2)).toStrictEqual(0);
   });
 
   it('decompresses compressed variable TTF', async () => {
@@ -66,7 +73,9 @@ describe('decompress', () => {
     );
     const input = fs.readFileSync(path.join(fixturesPath, 'enc-var-ttf.woff2'));
     const output = await decompress(input);
+    const output2 = await decompress2(input);
 
     expect(Buffer.compare(target, output)).toStrictEqual(0);
+    expect(Buffer.compare(target, output2)).toStrictEqual(0);
   });
 });
