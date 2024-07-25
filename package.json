@@ -23,7 +23,7 @@
     "esm"
   ],
   "scripts": {
-    "prepare": "npx husky install",
+    "prepare": "npx husky",
     "format": "prettier --write .",
     "lint": "eslint --quiet .",
     "typecheck": "tsc --noEmit",
