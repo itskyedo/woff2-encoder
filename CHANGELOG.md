@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/itskyedo/woff2-encoder/compare/v1.0.3...v1.1.0) (2024-07-25)
+
+
+### Features
+
+* change error message punctuation ([fd89002](https://github.com/itskyedo/woff2-encoder/commit/fd890029d8060a357d3adbd001db49bde8f30830))
+* create separate decompress wasm function ([40a272b](https://github.com/itskyedo/woff2-encoder/commit/40a272b2ec2207483411640a938123ee41652fc3))
+
 ## [1.0.3](https://github.com/itskyedo/woff2-encoder/compare/v1.0.2...v1.0.3) (2023-11-23)
 
 
