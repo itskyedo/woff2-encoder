@@ -51,7 +51,7 @@ import fs from 'node:fs';
 import { compress } from 'woff2-encoder';
 
 async function example() {
-  const fontFile = fs.readFileSync('./myFont.ttf');
+  const fontFile = fs.readFileSync('./my-font.ttf');
   const output = await compress(fontFile);
 }
 ```
@@ -62,7 +62,7 @@ async function example() {
 import { decompress } from 'woff2-encoder';
 
 async function example() {
-  const fontBuffer = await fetch('https://example.com/myFont.woff2').then(
+  const fontBuffer = await fetch('https://example.com/my-font.woff2').then(
     (res) => res.arrayBuffer()
   );
 
@@ -78,7 +78,7 @@ import opentype from 'opentype.js';
 import { decompress } from 'woff2-encoder';
 
 async function example() {
-  const fontFile = fs.readFileSync('./myFont.woff2');
+  const fontFile = fs.readFileSync('./my-font.woff2');
   const output = await decompress(fontFile);
 
   // Since opentype.js requires a buffer, we pass
