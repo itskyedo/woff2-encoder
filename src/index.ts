@@ -37,7 +37,7 @@ export async function compress(
   const encoder = await loadModule();
   const result = await encoder.compress(buffer);
   if (!result) {
-    throw new Error('Failed to compress the font data!');
+    throw new Error('Failed to compress the font data.');
   }
 
   return Uint8Array.from(result);
@@ -55,7 +55,7 @@ export async function decompress(
   const encoder = await loadModule();
   const result = await encoder.decompress(buffer);
   if (!result) {
-    throw new Error('Failed to decompress the font data!');
+    throw new Error('Failed to decompress the font data.');
   }
 
   return Uint8Array.from(result);
