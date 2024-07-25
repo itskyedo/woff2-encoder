@@ -30,7 +30,8 @@
     "codecheck": "prettier --check . && npm run lint && npm run typecheck",
     "test": "vitest --watch=false",
     "build:wasm": "docker build --platform linux/amd64 -t woff2-encoder . && docker run --platform linux/amd64 --rm -v $(pwd):/src/woff2-encoder -u $(id -u):$(id -g) -it woff2-encoder make -C /src/woff2-encoder",
-    "build": "rimraf dist && parcel build --no-cache --no-source-maps"
+    "build:decompressTypes": "tsc src/decompress.ts --declaration --emitDeclarationOnly --outDir dist",
+    "build": "rimraf dist && parcel build --no-cache --no-source-maps && npm run build:decompressTypes"
   },
   "type": "module",
   "source": "src/index.ts",
@@ -43,6 +44,33 @@
       "optimize": true,
       "sourceMap": false,
       "includeNodeModules": false
+    },
+    "decompress": {
+      "outputFormat": "esmodule",
+      "isLibrary": true,
+      "optimize": true,
+      "sourceMap": false,
+      "includeNodeModules": false,
+      "source": "src/decompress.ts",
+      "distDir": "dist"
+    }
+  },
+  "@parcel/resolver-default": {
+    "packageExports": true
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  },
+  "typesVersions": {
+    "*": {
+      "package.json": [
+        "package.json"
+      ],
+      "*": [
+        "dist/*"
+      ]
     }
   },
   "engines": {
