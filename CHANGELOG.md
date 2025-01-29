@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/itskyedo/woff2-encoder/compare/v1.1.0...v2.0.0) (2025-01-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* require node >= 18.x ([#27](https://github.com/itskyedo/woff2-encoder/issues/27))
+
+### Features
+
+* require node &gt;= 18.x ([#27](https://github.com/itskyedo/woff2-encoder/issues/27)) ([9970913](https://github.com/itskyedo/woff2-encoder/commit/99709136e840d8c73d2f68c63ed0a6b95deded40))
+
 ## [1.1.0](https://github.com/itskyedo/woff2-encoder/compare/v1.0.3...v1.1.0) (2024-07-25)
 
 
