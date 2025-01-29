@@ -8,7 +8,7 @@ A TypeScript library for handling WOFF2 encoding using WebAssembly.
 
 ### Prerequisites
 
-- If using Node, `>= 16.x`
+- If using Node, `>= 18.x`
 
 ### Installation
 
