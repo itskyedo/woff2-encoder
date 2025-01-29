@@ -89,7 +89,7 @@ jobs:
     needs: [codecheck]
     strategy:
       matrix:
-        node: ['16.x', '18.x', '20.x']
+        node: ['18.x', '20.x', '22.x']
         typescript: ['4.7.4', 'latest']
     steps:
       - name: Checkout branch
