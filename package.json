@@ -28,7 +28,7 @@
     "lint": "eslint --quiet .",
     "typecheck": "tsc --noEmit",
     "codecheck": "prettier --check . && npm run lint && npm run typecheck",
-    "test": "vitest --watch=false",
+    "test": "vitest",
     "build:wasm": "docker build --platform linux/amd64 -t woff2-encoder . && docker run --platform linux/amd64 --rm -v $(pwd):/src/woff2-encoder -u $(id -u):$(id -g) -it woff2-encoder make -C /src/woff2-encoder",
     "build:decompressTypes": "tsc src/decompress.ts --declaration --emitDeclarationOnly --outDir dist",
     "build": "rimraf dist && parcel build --no-cache --no-source-maps && npm run build:decompressTypes"
@@ -90,7 +90,7 @@
     "@shopify/eslint-plugin": "^43.0.0",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
-    "@vitest/coverage-v8": "^1.1.0",
+    "@vitest/coverage-v8": "^3.0.5",
     "eslint": "^8.50.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-jsdoc": "^46.8.2",
@@ -101,6 +101,6 @@
     "prettier-plugin-jsdoc": "^1.0.4",
     "rimraf": "^5.0.5",
     "typescript": "^4.7.4",
-    "vitest": "^1.1.0"
+    "vitest": "^3.0.5"
   }
 }
