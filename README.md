@@ -1,5 +1,9 @@
 # woff2-encoder
 
+[![License: MIT](https://img.shields.io/github/license/itskyedo/woff2-encoder?color=blue)](https://github.com/itskyedo/woff2-encoder/blob/main/LICENSE)
+[![NPM Version](https://img.shields.io/npm/v/woff2-encoder.svg?logo=npm&color=red)](https://npmjs.org/package/woff2-encoder)
+[![Download Count](https://img.shields.io/npm/dm/woff2-encoder.svg?color=green)](https://npmjs.org/package/woff2-encoder)
+
 A TypeScript library for handling WOFF2 encoding using WebAssembly.
 
 ---
