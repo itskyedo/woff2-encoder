@@ -2,27 +2,25 @@
 
 [![License: MIT](https://img.shields.io/github/license/itskyedo/woff2-encoder?color=blue)](https://github.com/itskyedo/woff2-encoder/blob/main/LICENSE)
 [![NPM Version](https://img.shields.io/npm/v/woff2-encoder.svg?logo=npm&color=red)](https://npmjs.org/package/woff2-encoder)
-[![Download Count](https://img.shields.io/npm/dm/woff2-encoder.svg?color=green)](https://npmjs.org/package/woff2-encoder)
+[![Download Count](https://img.shields.io/npm/dm/woff2-encoder.svg?color=brightgreen)](https://npmjs.org/package/woff2-encoder)
+
+## 👋 Introduction
 
 A TypeScript library for handling WOFF2 encoding using WebAssembly.
 
----
+### Getting Started
 
-## 🚀 Getting Started
+#### Prerequisites
 
-### Prerequisites
+- If using Node, `>= 20.x`
 
-- If using Node, `>= 18.x`
-
-### Installation
+#### Installation
 
 ```console
 npm install woff2-encoder
 ```
 
----
-
-## Notes
+## 🗒️ Notes
 
 If you only need to decompress WOFF2 files, it's recommended that you import
 from `woff2-encoder/decompress` (see the [Decompress only](#decompress-only)
@@ -50,8 +48,6 @@ Decompresses WOFF2 font data back to SFNT (TrueType/OpenType) font data.
 | Parameter | Type                        | Description          |
 | :-------- | :-------------------------- | :------------------- |
 | buffer    | `ArrayBuffer \| Uint8Array` | The WOFF2 font data. |
-
----
 
 ## 💡 Examples
 
@@ -100,6 +96,13 @@ async function example() {
 
 ### Decompress only
 
+If your project requires both compression and decompression, you should only
+import from the package root.
+
+However, if your project only needs to decompress fonts, it's highly recommended
+to import using the `/decompress` subpath. It uses its own separate WASM file
+which is 70% smaller.
+
 ```typescript
 import fs from 'node:fs';
 import opentype from 'opentype.js';
@@ -114,15 +117,14 @@ async function example() {
 }
 ```
 
----
-
 ## ⭐ Acknowledgements
 
-- [google/woff2](https://github.com/google/woff2) - For the C++ implemention for encoding WOFF2 files.
-- [fontello/wawoff2](https://github.com/fontello/wawoff2) - For the initial WebAssembly port of Google's WOFF2 encoder.
-
----
+- [google/woff2](https://github.com/google/woff2) - For the C++ implementation
+  for encoding WOFF2 files.
+- [fontello/wawoff2](https://github.com/fontello/wawoff2) - For the initial
+  WebAssembly port of Google's WOFF2 encoder.
 
 ## 📃 License
 
-MIT License. See [LICENSE](https://github.com/itskyedo/woff2-encoder/blob/main/LICENSE) for details.
+Created by [Kyedo](https://github.com/itskyedo) and licensed under the MIT
+License. See [LICENSE](./LICENSE) for more details.

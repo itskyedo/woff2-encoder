@@ -1,0 +1,7 @@
+commit-msg:
+  jobs:
+    - run: pnpm commitlint --edit {1}
+
+pre-push:
+  jobs:
+    - run: pnpm check && pnpm test

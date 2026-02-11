@@ -1,10 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
-
 import { describe, expect, it } from 'vitest';
-
-import { compress, decompress } from '../src';
-import decompress2 from '../src/decompress';
+import decompress2 from '../src/decompress.ts';
+import { compress, decompress } from '../src/index.ts';
 
 const fixturesPath = path.join(__dirname, 'fixtures');
 
