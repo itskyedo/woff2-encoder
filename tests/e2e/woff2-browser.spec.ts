@@ -8,6 +8,11 @@ interface MatchResult {
   matches: boolean;
 }
 
+interface FontMetrics {
+  numGlyphs: number;
+  unitsPerEm: number;
+}
+
 interface BrowserFixture {
   compressArrayBufferMatches(
     inputName: string,
@@ -26,6 +31,7 @@ interface BrowserFixture {
     inputName: string,
     expectedName: string
   ): Promise<MatchResult>;
+  parseDecompressedFont(inputName: string): Promise<FontMetrics>;
   repeatedCallsMatch(): Promise<MatchResult[]>;
   subpathDecompressMatches(
     inputName: string,
@@ -106,6 +112,17 @@ test('subpath decompress export works in the browser', async ({ page }) => {
   );
 
   expectMatch(result);
+});
+
+test('decompressed output parses as an OpenType font in the browser', async ({
+  page,
+}) => {
+  const metrics = await page.evaluate(() =>
+    window.woff2E2E.parseDecompressedFont('og.woff2')
+  );
+
+  expect(metrics.numGlyphs).toBeGreaterThan(0);
+  expect(metrics.unitsPerEm).toBeGreaterThan(0);
 });
 
 test('repeated calls reuse initialized modules', async ({ page }) => {

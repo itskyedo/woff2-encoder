@@ -7,6 +7,7 @@
     <script type="importmap">
       {
         "imports": {
+          "opentype.js": "/node_modules/opentype.js/dist/opentype.module.js",
           "woff2-encoder": "/dist/index.mjs",
           "woff2-encoder/decompress": "/dist/decompress.mjs"
         }
@@ -52,6 +53,12 @@
         };
       }
 
+      function toArrayBuffer(bytes) {
+        const copy = new Uint8Array(bytes.byteLength);
+        copy.set(bytes);
+        return copy.buffer;
+      }
+
       async function compressMatches(inputName, expectedName) {
         const { compress } = await import('woff2-encoder');
         const actual = await compress(await readFixture(inputName));
@@ -84,6 +91,21 @@
         );
         const actual = await decompress(await readFixture(inputName));
         return compareBytes(actual, await readFixture(expectedName));
+      }
+
+      async function parseDecompressedFont(inputName) {
+        const [{ decompress }, { parse }] = await Promise.all([
+          import('woff2-encoder'),
+          import('opentype.js'),
+        ]);
+        const font = parse(
+          toArrayBuffer(await decompress(await readFixture(inputName)))
+        );
+
+        return {
+          numGlyphs: font.numGlyphs,
+          unitsPerEm: font.unitsPerEm,
+        };
       }
 
       async function repeatedCallsMatch() {
@@ -130,6 +152,7 @@
         concurrentCallsMatch,
         decompressArrayBufferMatches,
         decompressMatches,
+        parseDecompressedFont,
         repeatedCallsMatch,
         subpathDecompressMatches,
       };
