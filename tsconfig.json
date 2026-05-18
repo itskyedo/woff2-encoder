@@ -26,5 +26,6 @@
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
     "pretty": true
-  }
+  },
+  "exclude": ["dist", "node_modules", "tests/e2e/package-exports.mjs"]
 }

@@ -32,6 +32,11 @@
     "typecheck": "tsc --noEmit",
     "check": "pnpm typecheck && pnpm lint && pnpm formatcheck",
     "test": "vitest",
+    "test:e2e": "pnpm build && pnpm test:e2e:exports && playwright test",
+    "test:e2e:exports": "node tests/e2e/package-exports.mjs",
+    "test:e2e:install": "playwright install --with-deps chromium firefox webkit",
+    "act:e2e": "node scripts/act.mjs e2e",
+    "act:test": "node scripts/act.mjs",
     "commitlint": "commitlint",
     "build:wasm": "docker build --platform linux/amd64 -t woff2-encoder . && docker run --platform linux/amd64 --rm -v $(pwd):/src/woff2-encoder -u $(id -u):$(id -g) -it woff2-encoder make -C /src/woff2-encoder",
     "build": "tsdown"
@@ -71,6 +76,7 @@
   "sideEffects": false,
   "devDependencies": {
     "@commitlint/cli": "^20.4.1",
+    "@playwright/test": "^1.59.1",
     "@vitest/coverage-v8": "^4.0.18",
     "lefthook": "^2.1.0",
     "oxfmt": "^0.45.0",

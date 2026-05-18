@@ -12,6 +12,7 @@
     "coverage/**",
     "dist/**",
     "node_modules/**",
+    ".pnpm-store/**",
     "CHANGELOG.md",
     "LICENSE",
     "LICENSE-THIRD-PARTY",

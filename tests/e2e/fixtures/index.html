@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>woff2-encoder E2E</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "woff2-encoder": "/dist/index.mjs",
+          "woff2-encoder/decompress": "/dist/decompress.mjs"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main>woff2-encoder browser fixture</main>
+    <script type="module">
+      const fixtureCache = new Map();
+
+      async function readFixture(name) {
+        const cached = fixtureCache.get(name);
+        if (cached) {
+          return cached.slice();
+        }
+
+        const response = await fetch(`/tests/fixtures/${name}`);
+        if (!response.ok) {
+          throw new Error(`Failed to load fixture ${name}`);
+        }
+
+        const bytes = new Uint8Array(await response.arrayBuffer());
+        fixtureCache.set(name, bytes);
+        return bytes.slice();
+      }
+
+      function bytePrefix(bytes) {
+        return Array.from(bytes.slice(0, 4))
+          .map((byte) => byte.toString(16).padStart(2, '0'))
+          .join(' ');
+      }
+
+      function compareBytes(actual, expected) {
+        return {
+          actualLength: actual.length,
+          actualPrefix: bytePrefix(actual),
+          expectedLength: expected.length,
+          expectedPrefix: bytePrefix(expected),
+          matches:
+            actual.length === expected.length &&
+            actual.every((byte, index) => byte === expected[index]),
+        };
+      }
+
+      async function compressMatches(inputName, expectedName) {
+        const { compress } = await import('woff2-encoder');
+        const actual = await compress(await readFixture(inputName));
+        return compareBytes(actual, await readFixture(expectedName));
+      }
+
+      async function compressArrayBufferMatches(inputName, expectedName) {
+        const { compress } = await import('woff2-encoder');
+        const input = await readFixture(inputName);
+        const actual = await compress(input.buffer);
+        return compareBytes(actual, await readFixture(expectedName));
+      }
+
+      async function decompressMatches(inputName, expectedName) {
+        const { decompress } = await import('woff2-encoder');
+        const actual = await decompress(await readFixture(inputName));
+        return compareBytes(actual, await readFixture(expectedName));
+      }
+
+      async function decompressArrayBufferMatches(inputName, expectedName) {
+        const { decompress } = await import('woff2-encoder');
+        const input = await readFixture(inputName);
+        const actual = await decompress(input.buffer);
+        return compareBytes(actual, await readFixture(expectedName));
+      }
+
+      async function subpathDecompressMatches(inputName, expectedName) {
+        const { default: decompress } = await import(
+          'woff2-encoder/decompress'
+        );
+        const actual = await decompress(await readFixture(inputName));
+        return compareBytes(actual, await readFixture(expectedName));
+      }
+
+      async function repeatedCallsMatch() {
+        const { compress, decompress } = await import('woff2-encoder');
+        const originalTtf = await readFixture('og.ttf');
+        const originalWoff2 = await readFixture('og.woff2');
+        const expectedWoff2 = await readFixture('enc-ttf.woff2');
+        const expectedTtf = await readFixture('dec-woff2.ttf');
+
+        return [
+          compareBytes(await compress(originalTtf), expectedWoff2),
+          compareBytes(await compress(originalTtf), expectedWoff2),
+          compareBytes(await decompress(originalWoff2), expectedTtf),
+          compareBytes(await decompress(originalWoff2), expectedTtf),
+        ];
+      }
+
+      async function concurrentCallsMatch() {
+        const { compress, decompress } = await import('woff2-encoder');
+        const originalTtf = await readFixture('og.ttf');
+        const originalWoff2 = await readFixture('og.woff2');
+        const expectedWoff2 = await readFixture('enc-ttf.woff2');
+        const expectedTtf = await readFixture('dec-woff2.ttf');
+        const compressionTasks = Array.from({ length: 4 }, () =>
+          compress(originalTtf.slice())
+        );
+        const decompressionTasks = Array.from({ length: 4 }, () =>
+          decompress(originalWoff2.slice())
+        );
+
+        return [
+          ...(await Promise.all(compressionTasks)).map((actual) =>
+            compareBytes(actual, expectedWoff2)
+          ),
+          ...(await Promise.all(decompressionTasks)).map((actual) =>
+            compareBytes(actual, expectedTtf)
+          ),
+        ];
+      }
+
+      window.woff2E2E = {
+        compressArrayBufferMatches,
+        compressMatches,
+        concurrentCallsMatch,
+        decompressArrayBufferMatches,
+        decompressMatches,
+        repeatedCallsMatch,
+        subpathDecompressMatches,
+      };
+      document.body.dataset.status = 'ready';
+    </script>
+  </body>
+</html>

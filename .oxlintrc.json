@@ -19,7 +19,13 @@
     "correctness": "error",
     "suspicious": "error"
   },
-  "ignorePatterns": ["build/**", "coverage/**", "dist/**", "node_modules/**"],
+  "ignorePatterns": [
+    "build/**",
+    "coverage/**",
+    "dist/**",
+    "node_modules/**",
+    ".pnpm-store/**"
+  ],
   "rules": {
     "@typescript-eslint/consistent-generic-constructors": [
       "error",
