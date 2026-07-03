@@ -1,5 +1,23 @@
 # Changelog
 
+## [3.0.0](https://github.com/itskyedo/woff2-encoder/compare/v2.0.0...v3.0.0)
+
+### ⚠ BREAKING CHANGES
+
+* require Node.js `>= 22.x`
+* raise the browser support floor to Chrome/Edge 85, Firefox 79, and Safari 14.1
+* WASM modules now initialize lazily on the first `compress`/`decompress` call instead of eagerly at import time
+* the package is resolved exclusively through the `exports` map, so `moduleResolution: node10` consumers are no longer supported
+
+### Features
+
+* upgrade Emscripten from v3.1.46 to v6.0.2, shrinking the bundles by roughly 16%
+
+### Bug Fixes
+
+* fix a use-after-free in the WASM bindings that could corrupt output when multiple compress/decompress calls ran concurrently
+* propagate module initialization errors to callers instead of leaving their promises unsettled
+
 ## [2.0.0](https://github.com/itskyedo/woff2-encoder/compare/v1.1.0...v2.0.0) (2025-01-29)
 
 

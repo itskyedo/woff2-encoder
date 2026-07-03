@@ -1,27 +1,23 @@
 import initModule from '../build/woff2-wasm.js';
 
-const modulePromise: Promise<Awaited<ReturnType<typeof initModule>>> =
-  new Promise((resolve) => {
-    void initModule({
-      onRuntimeInitialized() {
-        resolve(this as ReturnType<typeof initModule>);
-      },
-    });
-  });
+let modulePromise: ReturnType<typeof initModule> | undefined;
 
 /**
- * Asynchronously loads the WOFF2 module.
+ * Asynchronously loads the WOFF2 module. The module is initialized on first
+ * call and shared by all subsequent calls. If initialization fails, the error
+ * propagates to the caller and the next call retries instead of reusing the
+ * failed attempt.
  *
  * @returns A promise resolving to the WOFF2 module.
  * @internal
  */
-async function loadModule(): Promise<Awaited<typeof modulePromise>> {
-  const loadedModule = await modulePromise;
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(loadedModule);
-    }, 0);
+function loadModule(): ReturnType<typeof initModule> {
+  modulePromise ??= initModule().catch((error: unknown) => {
+    modulePromise = undefined;
+    throw error;
   });
+
+  return modulePromise;
 }
 
 /**

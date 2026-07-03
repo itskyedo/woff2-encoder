@@ -13,6 +13,7 @@ A TypeScript library for handling WOFF2 encoding using WebAssembly.
 #### Prerequisites
 
 - If using Node, `>= 22.x`
+- If using a browser, Chrome/Edge `>= 85`, Firefox `>= 79`, or Safari `>= 14.1`
 
 #### Installation
 
