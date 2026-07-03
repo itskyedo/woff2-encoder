@@ -79,7 +79,13 @@
       }
     ],
     "no-warning-comments": "warn",
-    "require-yield": "off"
+    "require-yield": "off",
+    "vitest/expect-expect": [
+      "error",
+      {
+        "assertFunctionNames": ["expect", "expectParseableFont"]
+      }
+    ]
   },
   "overrides": [
     {

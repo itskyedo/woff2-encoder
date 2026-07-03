@@ -12,7 +12,7 @@ A TypeScript library for handling WOFF2 encoding using WebAssembly.
 
 #### Prerequisites
 
-- If using Node, `>= 20.x`
+- If using Node, `>= 22.x`
 
 #### Installation
 

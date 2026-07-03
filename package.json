@@ -70,21 +70,21 @@
     "LICENSE"
   ],
   "engines": {
-    "node": ">= 20.x"
+    "node": ">= 22.x"
   },
-  "packageManager": "pnpm@10.28.2",
+  "packageManager": "pnpm@11.9.0+sha512.bd682d5d03fe525ef7c9fd6780c6884d1e756ac4c9c9fe00c538782824310dcf90e3ddc4f53835f06dfaebd5085e41855e0bcbb3b60de2ac5bbab89e5036f03b",
   "sideEffects": false,
   "devDependencies": {
-    "@commitlint/cli": "^20.4.1",
-    "@playwright/test": "^1.59.1",
-    "@types/opentype.js": "^1.3.9",
-    "@vitest/coverage-v8": "^4.0.18",
-    "lefthook": "^2.1.0",
-    "opentype.js": "^1.3.4",
-    "oxfmt": "^0.45.0",
-    "oxlint": "^1.60.0",
-    "tsdown": "^0.20.3",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
+    "@commitlint/cli": "^21.2.0",
+    "@playwright/test": "^1.61.1",
+    "@types/opentype.js": "^1.3.10",
+    "@vitest/coverage-v8": "^4.1.9",
+    "lefthook": "^2.1.9",
+    "opentype.js": "^2.0.0",
+    "oxfmt": "^0.57.0",
+    "oxlint": "^1.72.0",
+    "tsdown": "^0.22.3",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
   }
 }

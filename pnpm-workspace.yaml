@@ -1,3 +1,5 @@
+allowBuilds:
+  lefthook: true
 onlyBuiltDependencies:
   - esbuild
   - lefthook
