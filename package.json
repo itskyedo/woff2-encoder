@@ -68,7 +68,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "LICENSE-THIRD-PARTY"
   ],
   "engines": {
     "node": ">= 22.x"
