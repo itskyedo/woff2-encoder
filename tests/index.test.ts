@@ -48,6 +48,74 @@ describe('compress', () => {
   });
 });
 
+describe('input handling', () => {
+  it('accepts ArrayBuffer input', async () => {
+    const target = fs.readFileSync(path.join(fixturesPath, 'enc-ttf.woff2'));
+    const input = fs.readFileSync(path.join(fixturesPath, 'og.ttf'));
+    const output = await compress(toArrayBuffer(input));
+
+    expect(Buffer.compare(target, output)).toStrictEqual(0);
+  });
+
+  it('rejects invalid SFNT data', async () => {
+    await expect(compress(new Uint8Array([1, 2, 3, 4]))).rejects.toThrow(
+      'Failed to compress the font data.'
+    );
+  });
+
+  it('rejects invalid WOFF2 data', async () => {
+    await expect(decompress(new Uint8Array([1, 2, 3, 4]))).rejects.toThrow(
+      'Failed to decompress the font data.'
+    );
+    await expect(decompress2(new Uint8Array([1, 2, 3, 4]))).rejects.toThrow(
+      'Failed to decompress the font data.'
+    );
+  });
+
+  it('still works after rejecting invalid input', async () => {
+    await expect(compress(new Uint8Array([1, 2, 3, 4]))).rejects.toThrow(
+      'Failed to compress the font data.'
+    );
+
+    const target = fs.readFileSync(path.join(fixturesPath, 'enc-ttf.woff2'));
+    const input = fs.readFileSync(path.join(fixturesPath, 'og.ttf'));
+    const output = await compress(input);
+
+    expect(Buffer.compare(target, output)).toStrictEqual(0);
+  });
+});
+
+describe('concurrency', () => {
+  it('produces correct output for concurrent calls', async () => {
+    const ttf = fs.readFileSync(path.join(fixturesPath, 'og.ttf'));
+    const woff2 = fs.readFileSync(path.join(fixturesPath, 'og.woff2'));
+    const expectedWoff2 = fs.readFileSync(
+      path.join(fixturesPath, 'enc-ttf.woff2')
+    );
+    const expectedTtf = fs.readFileSync(
+      path.join(fixturesPath, 'dec-woff2.ttf')
+    );
+
+    const outputs = await Promise.all([
+      compress(ttf),
+      compress(ttf),
+      compress(ttf),
+      compress(ttf),
+      decompress(woff2),
+      decompress(woff2),
+      decompress(woff2),
+      decompress(woff2),
+    ]);
+
+    for (const output of outputs.slice(0, 4)) {
+      expect(Buffer.compare(expectedWoff2, output)).toStrictEqual(0);
+    }
+    for (const output of outputs.slice(4)) {
+      expect(Buffer.compare(expectedTtf, output)).toStrictEqual(0);
+    }
+  });
+});
+
 describe('decompress', () => {
   it('decompresses WOFF2', async () => {
     const target = fs.readFileSync(path.join(fixturesPath, 'dec-woff2.ttf'));
