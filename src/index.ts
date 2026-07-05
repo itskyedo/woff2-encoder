@@ -30,12 +30,12 @@ export async function compress(
   buffer: ArrayBuffer | Uint8Array
 ): Promise<Uint8Array> {
   const encoder = await loadModule();
-  const result = await encoder.compress(buffer);
+  const result = encoder.compress(buffer);
   if (!result) {
     throw new Error('Failed to compress the font data.');
   }
 
-  return Uint8Array.from(result);
+  return result;
 }
 
 /**
@@ -48,10 +48,10 @@ export async function decompress(
   buffer: ArrayBuffer | Uint8Array
 ): Promise<Uint8Array> {
   const encoder = await loadModule();
-  const result = await encoder.decompress(buffer);
+  const result = encoder.decompress(buffer);
   if (!result) {
     throw new Error('Failed to decompress the font data.');
   }
 
-  return Uint8Array.from(result);
+  return result;
 }

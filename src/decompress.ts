@@ -30,10 +30,10 @@ export default async function decompress(
   buffer: ArrayBuffer | Uint8Array
 ): Promise<Uint8Array> {
   const encoder = await loadModule();
-  const result = await encoder.decompress(buffer);
+  const result = encoder.decompress(buffer);
   if (!result) {
     throw new Error('Failed to decompress the font data.');
   }
 
-  return Uint8Array.from(result);
+  return result;
 }
