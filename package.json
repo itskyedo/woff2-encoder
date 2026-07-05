@@ -33,6 +33,7 @@
     "check": "pnpm typecheck && pnpm lint && pnpm formatcheck",
     "check:package": "attw --pack . --profile node16",
     "test": "vitest",
+    "test:coverage": "vitest --coverage",
     "test:e2e": "pnpm build && pnpm test:e2e:exports && playwright test",
     "test:e2e:exports": "node tests/e2e/package-exports.mjs",
     "test:e2e:install": "playwright install --with-deps chromium firefox webkit",
