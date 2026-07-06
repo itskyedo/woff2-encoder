@@ -12,7 +12,7 @@ A TypeScript library for handling WOFF2 encoding using WebAssembly.
 
 #### Prerequisites
 
-- If using Node, `>= 22.x`
+- If using Node, `>= 22.12`
 - If using a browser, Chrome/Edge `>= 85`, Firefox `>= 79`, or Safari `>= 14.1`
 
 #### Installation
@@ -27,6 +27,9 @@ If you only need to decompress WOFF2 files, it's recommended that you import
 from `woff2-encoder/decompress` (see the [Decompress only](#decompress-only)
 example below). This will net your end users a significant decrease in bundle
 size as it uses its own separate WASM file with a much smaller footprint.
+
+This package is ESM-only, however CJS projects on Node `>= 22.12` can still load
+it with `require`.
 
 ## 📚 API Reference
 

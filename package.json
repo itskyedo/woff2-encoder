@@ -31,7 +31,7 @@
     "fix": "pnpm lintfix && pnpm format",
     "typecheck": "tsc --noEmit",
     "check": "pnpm typecheck && pnpm lint && pnpm formatcheck",
-    "check:package": "attw --pack . --profile node16",
+    "check:package": "attw --pack . --profile esm-only",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "test:e2e": "pnpm build && pnpm test:e2e:exports && playwright test",
@@ -47,24 +47,12 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/index.d.mts",
-        "default": "./dist/index.mjs"
-      },
-      "require": {
-        "types": "./dist/index.d.cts",
-        "default": "./dist/index.cjs"
-      }
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
     },
     "./decompress": {
-      "import": {
-        "types": "./dist/decompress.d.mts",
-        "default": "./dist/decompress.mjs"
-      },
-      "require": {
-        "types": "./dist/decompress.d.cts",
-        "default": "./dist/decompress.cjs"
-      }
+      "types": "./dist/decompress.d.mts",
+      "default": "./dist/decompress.mjs"
     }
   },
   "files": [
@@ -74,7 +62,7 @@
     "LICENSE-THIRD-PARTY"
   ],
   "engines": {
-    "node": ">= 22.x"
+    "node": ">= 22.12"
   },
   "packageManager": "pnpm@11.9.0+sha512.bd682d5d03fe525ef7c9fd6780c6884d1e756ac4c9c9fe00c538782824310dcf90e3ddc4f53835f06dfaebd5085e41855e0bcbb3b60de2ac5bbab89e5036f03b",
   "sideEffects": false,

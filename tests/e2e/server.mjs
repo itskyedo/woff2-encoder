@@ -8,7 +8,6 @@ const host = '127.0.0.1';
 const port = Number(process.env.E2E_PORT ?? process.env.PORT ?? 4173);
 const rootDir = resolve(fileURLToPath(new URL('../../', import.meta.url)));
 const mimeTypes = new Map([
-  ['.cjs', 'text/javascript; charset=utf-8'],
   ['.css', 'text/css; charset=utf-8'],
   ['.html', 'text/html; charset=utf-8'],
   ['.js', 'text/javascript; charset=utf-8'],

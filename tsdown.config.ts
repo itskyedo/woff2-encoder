@@ -4,8 +4,8 @@ export default defineConfig([
   {
     entry: ['./src/index.ts'],
     outDir: './dist',
-    format: ['esm', 'cjs'],
-    target: ['node22', 'chrome85', 'firefox79', 'safari14.1'],
+    format: ['esm'],
+    target: ['node22.12', 'chrome85', 'firefox79', 'safari14.1'],
     clean: true,
     minify: true,
     dts: true,
@@ -15,8 +15,8 @@ export default defineConfig([
   {
     entry: ['./src/decompress.ts'],
     outDir: './dist',
-    format: ['esm', 'cjs'],
-    target: ['node22', 'chrome85', 'firefox79', 'safari14.1'],
+    format: ['esm'],
+    target: ['node22.12', 'chrome85', 'firefox79', 'safari14.1'],
     clean: true,
     minify: true,
     dts: true,

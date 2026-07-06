@@ -4,7 +4,7 @@
 
 ### ⚠ BREAKING CHANGES
 
-* require Node.js `>= 22.x`
+* require Node.js `>= 22.12`
 * raise the browser support floor to Chrome/Edge 85, Firefox 79, and Safari 14.1
 * WASM modules now initialize lazily on the first `compress`/`decompress` call instead of eagerly at import time
 * the package is resolved exclusively through the `exports` map, so `moduleResolution: node10` consumers are no longer supported
