@@ -50,6 +50,14 @@ Decompresses WOFF2 font data back to SFNT (TrueType/OpenType) font data.
 | :-------- | :-------------------------- | :------------------- |
 | buffer    | `ArrayBuffer \| Uint8Array` | The WOFF2 font data. |
 
+### `preload`
+
+Eagerly initializes the WASM module so the first `compress` or `decompress`
+call does not pay the one-time instantiation cost. Both the package root and
+the `woff2-encoder/decompress` subpath export their own `preload`.
+
+**Returns:** `Promise<void>` A promise that resolves once the module is ready.
+
 ## 💡 Examples
 
 ### Compress a TTF font using Node.js
@@ -92,6 +100,28 @@ async function example() {
   // Since opentype.js requires a buffer, we pass
   // in the buffer and not the byte array itself
   const fontData = opentype.parse(output.buffer);
+}
+```
+
+### Preload the WASM module
+
+By default, the WASM module is initialized on the first call to `compress` or
+`decompress`. If you would rather pay that one-time cost upfront — for example
+during app startup instead of during a user interaction — call `preload`.
+
+```typescript
+import fs from 'node:fs';
+import { compress, preload } from 'woff2-encoder';
+
+async function startup() {
+  // Initialize the WASM module before it's needed.
+  await preload();
+}
+
+async function example() {
+  // The first call no longer pays the initialization cost.
+  const fontFile = fs.readFileSync('./my-font.ttf');
+  const output = await compress(fontFile);
 }
 ```
 

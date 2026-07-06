@@ -21,6 +21,17 @@ function loadModule(): ReturnType<typeof initModule> {
 }
 
 /**
+ * Eagerly initializes the decompression-only WOFF2 module so the first call
+ * to `decompress` does not pay the one-time WASM instantiation cost. Calling
+ * this is optional: the module initializes automatically on first use.
+ *
+ * @returns A promise that resolves once the WOFF2 module is ready.
+ */
+export async function preload(): Promise<void> {
+  await loadModule();
+}
+
+/**
  * Decompresses WOFF2 font data back to SFNT (TrueType/OpenType) font data.
  *
  * @param buffer - The WOFF2 font data.

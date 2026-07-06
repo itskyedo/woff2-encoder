@@ -2,8 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parse as parseFont } from 'opentype.js';
 import { describe, expect, it } from 'vitest';
-import decompress2 from '../src/decompress.ts';
-import { compress, decompress } from '../src/index.ts';
+import decompress2, {
+  preload as preloadDecompress,
+} from '../src/decompress.ts';
+import { compress, decompress, preload } from '../src/index.ts';
 
 const fixturesPath = path.join(__dirname, 'fixtures');
 
@@ -42,6 +44,26 @@ describe('compress', () => {
       path.join(fixturesPath, 'enc-var-ttf.woff2')
     );
     const input = fs.readFileSync(path.join(fixturesPath, 'og-var.ttf'));
+    const output = await compress(input);
+
+    expect(Buffer.compare(target, output)).toStrictEqual(0);
+  });
+});
+
+describe('preload', () => {
+  it('resolves for both entry points and is idempotent', async () => {
+    await expect(preload()).resolves.toBeUndefined();
+    await expect(preloadDecompress()).resolves.toBeUndefined();
+    await expect(
+      Promise.all([preload(), preload(), preloadDecompress()])
+    ).resolves.toBeDefined();
+  });
+
+  it('leaves the module fully functional', async () => {
+    await preload();
+
+    const target = fs.readFileSync(path.join(fixturesPath, 'enc-ttf.woff2'));
+    const input = fs.readFileSync(path.join(fixturesPath, 'og.ttf'));
     const output = await compress(input);
 
     expect(Buffer.compare(target, output)).toStrictEqual(0);

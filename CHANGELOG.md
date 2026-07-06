@@ -12,6 +12,7 @@
 ### Features
 
 * upgrade Emscripten from v3.1.46 to v6.0.2, shrinking the bundles by roughly 16%
+* add a `preload()` export to both entry points for opting back into eager WASM initialization
 
 ### Bug Fixes
 
