@@ -53,7 +53,8 @@
     "./decompress": {
       "types": "./dist/decompress.d.mts",
       "default": "./dist/decompress.mjs"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist",

@@ -13,6 +13,7 @@ const args = [
   '.github/workflows/test.yml',
   '-P',
   `ubuntu-latest=${image}`,
+  '--pull=false',
   '--env',
   `E2E_PORT=${e2ePort}`,
   '--env',
