@@ -19,6 +19,8 @@ emscripten::val decompress(std::string input) {
   const bool ok = woff2::ConvertWOFF2ToTTF(raw_input, input.size(), &out);
 
   if (ok) {
+    output.resize(out.Size());
+
     // Copy into a JS-owned Uint8Array; a typed_memory_view would dangle once
     // `output` is destroyed on return.
     return emscripten::val::global("Uint8Array")

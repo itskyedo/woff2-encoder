@@ -168,6 +168,20 @@ describe('decompress', () => {
     expect(Buffer.compare(target, output2)).toStrictEqual(0);
   });
 
+  it('ignores an overstated totalSfntSize header field', async () => {
+    const target = fs.readFileSync(path.join(fixturesPath, 'dec-woff2.ttf'));
+    const input = fs.readFileSync(path.join(fixturesPath, 'og.woff2'));
+
+    const tampered = Buffer.from(input);
+    tampered.writeUInt32BE(tampered.readUInt32BE(16) + 4096, 16);
+
+    const output = await decompress(tampered);
+    const output2 = await decompress2(tampered);
+
+    expect(Buffer.compare(target, output)).toStrictEqual(0);
+    expect(Buffer.compare(target, output2)).toStrictEqual(0);
+  });
+
   it('decompresses compressed OTF', async () => {
     const target = fs.readFileSync(path.join(fixturesPath, 'dec-enc-otf.otf'));
     const input = fs.readFileSync(path.join(fixturesPath, 'enc-otf.woff2'));
