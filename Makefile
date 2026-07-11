@@ -8,7 +8,7 @@ all:
 		-s SINGLE_FILE=1 \
 		-s MODULARIZE=1 \
 		-s EXPORT_ES6=1 \
-		-s ENVIRONMENT=web \
+		-s ENVIRONMENT=web,worker \
 		-I/src/woff2/include/ \
 		/src/build/woff2-wasm/libwoff2common.a \
 		/src/build/brotli-wasm/libbrotlicommon-static.a \
@@ -29,7 +29,7 @@ all:
 		-s SINGLE_FILE=1 \
 		-s MODULARIZE=1 \
 		-s EXPORT_ES6=1 \
-		-s ENVIRONMENT=web \
+		-s ENVIRONMENT=web,worker \
 		-I/src/woff2/include/ \
 		/src/build/woff2-wasm/libwoff2common.a \
 		/src/build/brotli-wasm/libbrotlicommon-static.a \

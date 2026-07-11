@@ -40,7 +40,7 @@
     "act:e2e": "node scripts/act.mjs e2e",
     "act:test": "node scripts/act.mjs",
     "commitlint": "commitlint",
-    "build:wasm": "docker build --platform linux/amd64 -t woff2-encoder . && docker run --platform linux/amd64 --rm -v $(pwd):/src/woff2-encoder -u $(id -u):$(id -g) -it woff2-encoder make -C /src/woff2-encoder",
+    "build:wasm": "docker build --platform linux/amd64 -t woff2-encoder . && docker run --platform linux/amd64 --rm -v $(pwd):/src/woff2-encoder -u $(id -u):$(id -g) woff2-encoder make -C /src/woff2-encoder",
     "build": "tsdown",
     "prepack": "pnpm build"
   },
