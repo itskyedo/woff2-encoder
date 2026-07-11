@@ -31,6 +31,11 @@ size as it uses its own separate WASM file with a much smaller footprint.
 This package is ESM-only, however CJS projects on Node `>= 22.12` can still load
 it with `require`.
 
+Decompression output is limited to 30 MB of uncompressed font data, matching
+the default limit of the upstream [google/woff2](https://github.com/google/woff2)
+library. This guards against decompression bombs, but it means fonts larger
+than 30 MB uncompressed will fail to decompress.
+
 ## 📚 API Reference
 
 ### `compress`
@@ -52,6 +57,13 @@ Decompresses WOFF2 font data back to SFNT (TrueType/OpenType) font data.
 | Parameter | Type                        | Description          |
 | :-------- | :-------------------------- | :------------------- |
 | buffer    | `ArrayBuffer \| Uint8Array` | The WOFF2 font data. |
+
+### `MAX_DECOMPRESSED_SIZE`
+
+The maximum decompressed font size in bytes (`31457280`, i.e. 30 MB), matching
+the default limit of the upstream [google/woff2](https://github.com/google/woff2)
+library. Fonts whose WOFF2 header declares a larger size are rejected by
+`decompress` before any processing.
 
 ### `preload`
 

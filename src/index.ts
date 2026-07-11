@@ -1,4 +1,7 @@
 import initModule from '../build/woff2-wasm.js';
+import { assertDecompressedSizeWithinLimit } from './limits.ts';
+
+export { MAX_DECOMPRESSED_SIZE } from './limits.ts';
 
 let modulePromise: ReturnType<typeof initModule> | undefined;
 
@@ -86,6 +89,8 @@ export async function compress(
 export async function decompress(
   buffer: ArrayBuffer | Uint8Array
 ): Promise<Uint8Array> {
+  assertDecompressedSizeWithinLimit(buffer);
+
   const result = await withModule((encoder) => encoder.decompress(buffer));
   if (!result) {
     throw new Error('Failed to decompress the font data.');

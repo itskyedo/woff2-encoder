@@ -2,8 +2,14 @@ import assert from 'node:assert/strict';
 import { Buffer } from 'node:buffer';
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
-import { compress, decompress, preload } from 'woff2-encoder';
+import {
+  compress,
+  decompress,
+  MAX_DECOMPRESSED_SIZE,
+  preload,
+} from 'woff2-encoder';
 import subpathDecompress, {
+  MAX_DECOMPRESSED_SIZE as subpathMaxDecompressedSize,
   preload as subpathPreload,
 } from 'woff2-encoder/decompress';
 
@@ -21,6 +27,8 @@ assert.equal(typeof decompress, 'function');
 assert.equal(typeof preload, 'function');
 assert.equal(typeof subpathDecompress, 'function');
 assert.equal(typeof subpathPreload, 'function');
+assert.equal(MAX_DECOMPRESSED_SIZE, 30 * 1024 * 1024);
+assert.equal(subpathMaxDecompressedSize, MAX_DECOMPRESSED_SIZE);
 await preload();
 await subpathPreload();
 assert.equal(Buffer.compare(Buffer.from(compressed), expectedWoff2), 0);

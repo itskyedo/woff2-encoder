@@ -3,9 +3,15 @@ import path from 'node:path';
 import { parse as parseFont } from 'opentype.js';
 import { describe, expect, it } from 'vitest';
 import decompress2, {
+  MAX_DECOMPRESSED_SIZE as MAX_DECOMPRESSED_SIZE_2,
   preload as preloadDecompress,
 } from '../src/decompress.ts';
-import { compress, decompress, preload } from '../src/index.ts';
+import {
+  compress,
+  decompress,
+  MAX_DECOMPRESSED_SIZE,
+  preload,
+} from '../src/index.ts';
 
 const fixturesPath = path.join(__dirname, 'fixtures');
 
@@ -180,6 +186,24 @@ describe('decompress', () => {
 
     expect(Buffer.compare(target, output)).toStrictEqual(0);
     expect(Buffer.compare(target, output2)).toStrictEqual(0);
+  });
+
+  it('exports the maximum decompressed size from both entry points', () => {
+    expect(MAX_DECOMPRESSED_SIZE).toStrictEqual(30 * 1024 * 1024);
+    expect(MAX_DECOMPRESSED_SIZE_2).toStrictEqual(MAX_DECOMPRESSED_SIZE);
+  });
+
+  it('rejects fonts that declare a decompressed size above the limit', async () => {
+    const input = fs.readFileSync(path.join(fixturesPath, 'og.woff2'));
+    const tampered = Buffer.from(input);
+    tampered.writeUInt32BE(31 * 1024 * 1024, 16);
+
+    await expect(decompress(tampered)).rejects.toThrow(
+      'Font decompressed output size cannot exceed 30 MB.'
+    );
+    await expect(decompress2(tampered)).rejects.toThrow(
+      'Font decompressed output size cannot exceed 30 MB.'
+    );
   });
 
   it('decompresses compressed OTF', async () => {
