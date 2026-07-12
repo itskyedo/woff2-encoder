@@ -28,8 +28,7 @@ from `woff2-encoder/decompress` (see the [Decompress only](#decompress-only)
 example below). This will net your end users a significant decrease in bundle
 size as it uses its own separate WASM file with a much smaller footprint.
 
-This package is ESM-only, however CJS projects on Node `>= 22.12` can still load
-it with `require`.
+This package is ESM-only, however CJS projects can still load with `require`.
 
 Decompression output is limited to 30 MB of uncompressed font data, matching
 the default limit of the upstream [google/woff2](https://github.com/google/woff2)
@@ -57,6 +56,14 @@ Decompresses WOFF2 font data back to SFNT (TrueType/OpenType) font data.
 | Parameter | Type                        | Description          |
 | :-------- | :-------------------------- | :------------------- |
 | buffer    | `ArrayBuffer \| Uint8Array` | The WOFF2 font data. |
+
+### `preload`
+
+Eagerly initializes the WASM module so the first `compress` or `decompress`
+call does not pay the one-time instantiation cost. Both the package root and
+the `woff2-encoder/decompress` subpath export their own `preload`.
+
+**Returns:** `Promise<void>` A promise that resolves once the module is ready.
 
 ### `isWoff2Error`
 
@@ -92,18 +99,10 @@ try {
 
 ### `MAX_DECOMPRESSED_SIZE`
 
-The maximum decompressed font size in bytes (`31457280`, i.e. 30 MB), matching
+The maximum decompressed font size in bytes (3,1457,280 bytes, i.e. 30 MB), matching
 the default limit of the upstream [google/woff2](https://github.com/google/woff2)
 library. Fonts whose WOFF2 header declares a larger size are rejected by
 `decompress` before any processing.
-
-### `preload`
-
-Eagerly initializes the WASM module so the first `compress` or `decompress`
-call does not pay the one-time instantiation cost. Both the package root and
-the `woff2-encoder/decompress` subpath export their own `preload`.
-
-**Returns:** `Promise<void>` A promise that resolves once the module is ready.
 
 ## 💡 Examples
 
@@ -152,9 +151,8 @@ async function example() {
 
 ### Preload the WASM module
 
-By default, the WASM module is initialized on the first call to `compress` or
-`decompress`. If you would rather pay that one-time cost upfront — for example
-during app startup instead of during a user interaction — call `preload`.
+This will preload the WASM module to speed up the initialization that happens on
+the first compress/decompress call.
 
 ```typescript
 import fs from 'node:fs';
