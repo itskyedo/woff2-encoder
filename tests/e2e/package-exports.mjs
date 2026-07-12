@@ -5,12 +5,16 @@ import { createRequire } from 'node:module';
 import {
   compress,
   decompress,
+  isWoff2Error,
   MAX_DECOMPRESSED_SIZE,
   preload,
+  Woff2ErrorCode,
 } from 'woff2-encoder';
 import subpathDecompress, {
+  isWoff2Error as subpathIsWoff2Error,
   MAX_DECOMPRESSED_SIZE as subpathMaxDecompressedSize,
   preload as subpathPreload,
+  Woff2ErrorCode as subpathWoff2ErrorCode,
 } from 'woff2-encoder/decompress';
 
 const fixturesDir = new URL('../fixtures/', import.meta.url);
@@ -29,6 +33,16 @@ assert.equal(typeof subpathDecompress, 'function');
 assert.equal(typeof subpathPreload, 'function');
 assert.equal(MAX_DECOMPRESSED_SIZE, 30 * 1024 * 1024);
 assert.equal(subpathMaxDecompressedSize, MAX_DECOMPRESSED_SIZE);
+
+const woff2Error = await decompress(new Uint8Array([1, 2, 3, 4])).then(
+  () => undefined,
+  (error) => error
+);
+assert.equal(isWoff2Error(woff2Error), true);
+assert.equal(subpathIsWoff2Error(woff2Error), true);
+assert.equal(woff2Error.code, Woff2ErrorCode.DECOMPRESS_FAILED);
+assert.deepEqual(subpathWoff2ErrorCode, Woff2ErrorCode);
+assert.equal(isWoff2Error(new Error('unrelated')), false);
 await preload();
 await subpathPreload();
 assert.equal(Buffer.compare(Buffer.from(compressed), expectedWoff2), 0);

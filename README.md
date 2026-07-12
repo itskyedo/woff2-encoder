@@ -58,6 +58,38 @@ Decompresses WOFF2 font data back to SFNT (TrueType/OpenType) font data.
 | :-------- | :-------------------------- | :------------------- |
 | buffer    | `ArrayBuffer \| Uint8Array` | The WOFF2 font data. |
 
+### `isWoff2Error`
+
+Returns whether an unknown value is an error thrown by this library.
+
+**Returns:** `error is Woff2Error`
+
+| Parameter | Type      | Description         |
+| :-------- | :-------- | :------------------ |
+| error     | `unknown` | The value to check. |
+
+| Code                | Meaning                                                         |
+| :------------------ | :-------------------------------------------------------------- |
+| `COMPRESS_FAILED`   | The input could not be compressed (e.g. invalid SFNT data).     |
+| `DECOMPRESS_FAILED` | The input could not be decompressed (e.g. invalid WOFF2 data).  |
+| `MAX_SIZE_EXCEEDED` | The declared decompressed size exceeds `MAX_DECOMPRESSED_SIZE`. |
+
+The codes are also available with the `Woff2ErrorCode` object.
+
+```typescript
+import { decompress, isWoff2Error, Woff2ErrorCode } from 'woff2-encoder';
+
+try {
+  await decompress(fontBuffer);
+} catch (error) {
+  if (isWoff2Error(error) && error.code === Woff2ErrorCode.MAX_SIZE_EXCEEDED) {
+    // The font is too large to decompress.
+  } else {
+    throw error;
+  }
+}
+```
+
 ### `MAX_DECOMPRESSED_SIZE`
 
 The maximum decompressed font size in bytes (`31457280`, i.e. 30 MB), matching

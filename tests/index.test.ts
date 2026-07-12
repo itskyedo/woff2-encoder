@@ -3,14 +3,17 @@ import path from 'node:path';
 import { parse as parseFont } from 'opentype.js';
 import { describe, expect, it } from 'vitest';
 import decompress2, {
+  isWoff2Error as isWoff2Error2,
   MAX_DECOMPRESSED_SIZE as MAX_DECOMPRESSED_SIZE_2,
   preload as preloadDecompress,
 } from '../src/decompress.ts';
 import {
   compress,
   decompress,
+  isWoff2Error,
   MAX_DECOMPRESSED_SIZE,
   preload,
+  Woff2ErrorCode,
 } from '../src/index.ts';
 
 const fixturesPath = path.join(__dirname, 'fixtures');
@@ -186,6 +189,42 @@ describe('decompress', () => {
 
     expect(Buffer.compare(target, output)).toStrictEqual(0);
     expect(Buffer.compare(target, output2)).toStrictEqual(0);
+  });
+
+  it('throws errors with stable machine-readable codes', async () => {
+    const input = fs.readFileSync(path.join(fixturesPath, 'og.woff2'));
+    const tampered = Buffer.from(input);
+    tampered.writeUInt32BE(31 * 1024 * 1024, 16);
+    const invalid = new Uint8Array([1, 2, 3, 4]);
+
+    const sizeError: unknown = await decompress(tampered).catch(
+      (error: unknown) => error
+    );
+    const decompressError: unknown = await decompress(invalid).catch(
+      (error: unknown) => error
+    );
+    const compressError: unknown = await compress(invalid).catch(
+      (error: unknown) => error
+    );
+    const subpathSizeError: unknown = await decompress2(tampered).catch(
+      (error: unknown) => error
+    );
+
+    expect(isWoff2Error(sizeError) && sizeError.code).toStrictEqual(
+      Woff2ErrorCode.MAX_SIZE_EXCEEDED
+    );
+    expect(isWoff2Error(decompressError) && decompressError.code).toStrictEqual(
+      Woff2ErrorCode.DECOMPRESS_FAILED
+    );
+    expect(isWoff2Error(compressError) && compressError.code).toStrictEqual(
+      Woff2ErrorCode.COMPRESS_FAILED
+    );
+    expect(
+      isWoff2Error2(subpathSizeError) && subpathSizeError.code
+    ).toStrictEqual(Woff2ErrorCode.MAX_SIZE_EXCEEDED);
+    expect(isWoff2Error2(sizeError)).toBe(true);
+    expect(isWoff2Error(new Error('unrelated'))).toBe(false);
+    expect(isWoff2Error(undefined)).toBe(false);
   });
 
   it('exports the maximum decompressed size from both entry points', () => {

@@ -1,3 +1,5 @@
+import { Woff2Error, Woff2ErrorCode } from './errors.ts';
+
 const WOFF2_SIGNATURE = 0x77_4f_46_32;
 
 /**
@@ -28,6 +30,6 @@ export function assertDecompressedSizeWithinLimit(
 
   const declaredSize = view.getUint32(16);
   if (declaredSize > MAX_DECOMPRESSED_SIZE) {
-    throw new Error('Font decompressed output size cannot exceed 30 MB.');
+    throw new Woff2Error(Woff2ErrorCode.MAX_SIZE_EXCEEDED);
   }
 }
