@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.0.0](https://github.com/itskyedo/woff2-encoder/compare/v2.0.0...v3.0.0)
+## [3.0.0](https://github.com/itskyedo/woff2-encoder/compare/v2.0.0...v3.0.0-beta.1)
 
 ### ⚠ BREAKING CHANGES
 
@@ -8,16 +8,24 @@
 * raise the browser support floor to Chrome/Edge 85, Firefox 79, and Safari 14.1
 * WASM modules now initialize lazily on the first `compress`/`decompress` call instead of eagerly at import time
 * the package is resolved exclusively through the `exports` map, so `moduleResolution: node10` consumers are no longer supported
+* errors thrown by the library now have the name `Woff2Error` instead of `Error`
+* WOFF2 files exceeding the existing 30 MB decompression limit now fail with a `MAX_SIZE_EXCEEDED` error before any processing instead of the generic decompression error
 
 ### Features
 
-* upgrade Emscripten from v3.1.46 to v6.0.2, shrinking the bundles by roughly 16%
+* upgrade Emscripten from v3.1.46 to v6.0.2
 * add a `preload()` export to both entry points for opting back into eager WASM initialization
+* add an `isWoff2Error()` type guard, a `Woff2Error` type, a frozen `Woff2ErrorCode` constant object, and a `MAX_DECOMPRESSED_SIZE` constant
+* build the WASM modules for the `web` and `worker` environments
+* return the WASM output buffer directly instead of copying it
+* expose `./package.json` through the `exports` map
 
 ### Bug Fixes
 
 * fix a use-after-free in the WASM bindings that could corrupt output when multiple compress/decompress calls ran concurrently
 * propagate module initialization errors to callers instead of leaving their promises unsettled
+* trim decompressed output to the actual reconstructed size instead of trusting the header's `totalSfntSize` field, which could append trailing zero bytes to the output
+* discard the cached WASM module after a runtime crash so the next call re-initializes a fresh instance instead of reusing the dead one
 
 ## [2.0.0](https://github.com/itskyedo/woff2-encoder/compare/v1.1.0...v2.0.0) (2025-01-29)
 
