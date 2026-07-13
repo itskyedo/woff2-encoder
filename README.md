@@ -4,6 +4,11 @@
 [![NPM Version](https://img.shields.io/npm/v/woff2-encoder.svg?logo=npm&color=red)](https://npmjs.org/package/woff2-encoder)
 [![Download Count](https://img.shields.io/npm/dm/woff2-encoder.svg?color=brightgreen)](https://npmjs.org/package/woff2-encoder)
 
+> [!IMPORTANT]
+> You are currently viewing the docs for the upcoming v3 release, which is currently in beta.
+>
+> The current version is tagged [v2.0.0](https://github.com/itskyedo/woff2-encoder/tree/v2.0.0).
+
 ## 👋 Introduction
 
 A TypeScript library for handling WOFF2 encoding using WebAssembly.
@@ -18,7 +23,7 @@ A TypeScript library for handling WOFF2 encoding using WebAssembly.
 #### Installation
 
 ```console
-npm install woff2-encoder
+npm install woff2-encoder@beta
 ```
 
 ## 🗒️ Notes
@@ -28,7 +33,7 @@ from `woff2-encoder/decompress` (see the [Decompress only](#decompress-only)
 example below). This will net your end users a significant decrease in bundle
 size as it uses its own separate WASM file with a much smaller footprint.
 
-This package is ESM-only, however CJS projects can still load with `require`.
+This package is ESM-only, however CJS projects can still load it with `require`.
 
 Decompression output is limited to 30 MB of uncompressed font data, matching
 the default limit of the upstream [google/woff2](https://github.com/google/woff2)
@@ -99,7 +104,7 @@ try {
 
 ### `MAX_DECOMPRESSED_SIZE`
 
-The maximum decompressed font size in bytes (3,1457,280 bytes, i.e. 30 MB), matching
+The maximum decompressed font size in bytes (31,457,280 bytes, i.e. 30 MB), matching
 the default limit of the upstream [google/woff2](https://github.com/google/woff2)
 library. Fonts whose WOFF2 header declares a larger size are rejected by
 `decompress` before any processing.
