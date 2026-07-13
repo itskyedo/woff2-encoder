@@ -21,10 +21,13 @@ emscripten::val compress(std::string input) {
   }
   output.resize(output_size);
 
-  return emscripten::val(emscripten::typed_memory_view(
-      output.size(),
-      reinterpret_cast<unsigned const char*>(output.data())
-    ));
+  // Copy into a JS-owned Uint8Array; a typed_memory_view would dangle once
+  // `output` is destroyed on return.
+  return emscripten::val::global("Uint8Array")
+      .new_(emscripten::val(emscripten::typed_memory_view(
+        output.size(),
+        reinterpret_cast<unsigned const char*>(output.data())
+      )));
 }
 
 EMSCRIPTEN_BINDINGS(woff2_compress) {

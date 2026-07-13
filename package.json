@@ -1,6 +1,6 @@
 {
   "name": "woff2-encoder",
-  "version": "2.0.0",
+  "version": "3.0.0-beta.1",
   "description": "A TypeScript library for handling WOFF2 encoding using WebAssembly",
   "author": "Kyedo <hey@kyedo.dev> (https://github.com/itskyedo)",
   "license": "MIT",
@@ -23,84 +23,62 @@
     "esm"
   ],
   "scripts": {
-    "prepare": "npx husky",
-    "format": "prettier --write .",
-    "lint": "eslint --quiet .",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "formatcheck": "pnpm format:check",
+    "lint": "oxlint --deny-warnings .",
+    "lintfix": "oxlint --fix .",
+    "fix": "pnpm lintfix && pnpm format",
     "typecheck": "tsc --noEmit",
-    "codecheck": "prettier --check . && npm run lint && npm run typecheck",
+    "check": "pnpm typecheck && pnpm lint && pnpm formatcheck",
+    "check:package": "attw --pack . --profile esm-only",
     "test": "vitest",
-    "build:wasm": "docker build --platform linux/amd64 -t woff2-encoder . && docker run --platform linux/amd64 --rm -v $(pwd):/src/woff2-encoder -u $(id -u):$(id -g) -it woff2-encoder make -C /src/woff2-encoder",
-    "build:decompressTypes": "tsc src/decompress.ts --declaration --emitDeclarationOnly --outDir dist",
-    "build": "rimraf dist && parcel build --no-cache --no-source-maps && npm run build:decompressTypes"
+    "test:coverage": "vitest --coverage",
+    "test:e2e": "pnpm build && pnpm test:e2e:exports && playwright test",
+    "test:e2e:exports": "node tests/e2e/package-exports.mjs",
+    "test:e2e:install": "playwright install --with-deps chromium firefox webkit",
+    "act:e2e": "node scripts/act.mjs e2e",
+    "act:test": "node scripts/act.mjs",
+    "commitlint": "commitlint",
+    "build:wasm": "docker build --platform linux/amd64 -t woff2-encoder . && docker run --platform linux/amd64 --rm -v $(pwd):/src/woff2-encoder -u $(id -u):$(id -g) woff2-encoder make -C /src/woff2-encoder",
+    "build": "tsdown",
+    "prepack": "pnpm build"
   },
   "type": "module",
-  "source": "src/index.ts",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "targets": {
-    "module": {
-      "outputFormat": "esmodule",
-      "isLibrary": true,
-      "optimize": true,
-      "sourceMap": false,
-      "includeNodeModules": false
-    },
-    "decompress": {
-      "outputFormat": "esmodule",
-      "isLibrary": true,
-      "optimize": true,
-      "sourceMap": false,
-      "includeNodeModules": false,
-      "source": "src/decompress.ts",
-      "distDir": "dist"
-    }
-  },
-  "@parcel/resolver-default": {
-    "packageExports": true
-  },
   "exports": {
-    "./package.json": "./package.json",
-    ".": "./dist/index.js",
-    "./*": "./dist/*.js"
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "./decompress": {
+      "types": "./dist/decompress.d.mts",
+      "default": "./dist/decompress.mjs"
+    },
+    "./package.json": "./package.json"
   },
-  "typesVersions": {
-    "*": {
-      "package.json": [
-        "package.json"
-      ],
-      "*": [
-        "dist/*"
-      ]
-    }
-  },
-  "engines": {
-    "node": ">= 18.x"
-  },
-  "sideEffects": false,
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "LICENSE-THIRD-PARTY"
   ],
+  "engines": {
+    "node": ">= 22.12"
+  },
+  "packageManager": "pnpm@11.9.0+sha512.bd682d5d03fe525ef7c9fd6780c6884d1e756ac4c9c9fe00c538782824310dcf90e3ddc4f53835f06dfaebd5085e41855e0bcbb3b60de2ac5bbab89e5036f03b",
+  "sideEffects": false,
   "devDependencies": {
-    "@commitlint/cli": "^20.3.1",
-    "@commitlint/config-conventional": "^17.7.0",
-    "@parcel/packager-ts": "^2.9.3",
-    "@parcel/transformer-typescript-types": "^2.9.3",
-    "@shopify/eslint-plugin": "^43.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.7.4",
-    "@typescript-eslint/parser": "^6.7.4",
-    "@vitest/coverage-v8": "^3.0.7",
-    "eslint": "^8.50.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-jsdoc": "^46.8.2",
-    "eslint-plugin-sort-export-all": "^1.4.1",
-    "lint-staged": "^15.2.9",
-    "parcel": "^2.9.3",
-    "prettier": "^3.0.3",
-    "prettier-plugin-jsdoc": "^1.0.4",
-    "rimraf": "^5.0.5",
-    "typescript": "^4.7.4",
-    "vitest": "^3.0.7"
+    "@arethetypeswrong/cli": "^0.18.4",
+    "@commitlint/cli": "^21.2.0",
+    "@playwright/test": "^1.61.1",
+    "@types/opentype.js": "^1.3.10",
+    "@vitest/coverage-v8": "^4.1.9",
+    "lefthook": "^2.1.9",
+    "opentype.js": "^2.0.0",
+    "oxfmt": "^0.57.0",
+    "oxlint": "^1.72.0",
+    "tsdown": "^0.22.3",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.9"
   }
 }

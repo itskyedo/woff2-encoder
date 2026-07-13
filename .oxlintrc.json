@@ -1,0 +1,98 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "eslint",
+    "typescript",
+    "oxc",
+    "import",
+    "jsdoc",
+    "promise",
+    "vitest"
+  ],
+  "env": {
+    "browser": true,
+    "builtin": true,
+    "node": true,
+    "vitest": true
+  },
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error"
+  },
+  "ignorePatterns": [
+    "build/**",
+    "coverage/**",
+    "dist/**",
+    "node_modules/**",
+    ".pnpm-store/**"
+  ],
+  "rules": {
+    "@typescript-eslint/consistent-generic-constructors": [
+      "error",
+      "type-annotation"
+    ],
+    "@typescript-eslint/consistent-type-imports": [
+      "warn",
+      {
+        "fixStyle": "inline-type-imports"
+      }
+    ],
+    "@typescript-eslint/dot-notation": [
+      "error",
+      {
+        "allowPrivateClassPropertyAccess": true,
+        "allowProtectedClassPropertyAccess": true
+      }
+    ],
+    "@typescript-eslint/no-empty-object-type": [
+      "error",
+      {
+        "allowInterfaces": "with-single-extends"
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-inferrable-types": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "args": "all",
+        "argsIgnorePattern": "^_",
+        "caughtErrors": "all",
+        "caughtErrorsIgnorePattern": "^_",
+        "destructuredArrayIgnorePattern": "^_",
+        "ignoreRestSiblings": true,
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "import/consistent-type-specifier-style": ["warn", "prefer-inline"],
+    "import/no-cycle": "error",
+    "jsdoc/require-param": [
+      "error",
+      {
+        "checkDestructuredRoots": false
+      }
+    ],
+    "jsdoc/require-returns": [
+      "error",
+      {
+        "checkGetters": false
+      }
+    ],
+    "no-warning-comments": "warn",
+    "require-yield": "off",
+    "vitest/expect-expect": [
+      "error",
+      {
+        "assertFunctionNames": ["expect", "expectParseableFont"]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.spec.ts"],
+      "rules": {
+        "@typescript-eslint/no-unsafe-assignment": "off"
+      }
+    }
+  ]
+}

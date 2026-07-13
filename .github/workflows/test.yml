@@ -22,123 +22,188 @@ env:
   HEAD_REF: ${{ github.head_ref || github.ref }}
 
 jobs:
-  setup:
-    name: Setup testing environment
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout branch
-        uses: actions/checkout@v3
-
-      - name: Cache node modules
-        id: node-modules-cache
-        uses: actions/cache@v3
-        env:
-          cache-name: node-modules-cache
-        with:
-          path: node_modules
-          key: ${{ env.cache-name }}-${{ env.HEAD_REF }}-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ env.cache-name }}-${{ env.HEAD_REF }}-${{ runner.os }}-
-            ${{ env.cache-name }}-${{ env.HEAD_REF }}-
-            ${{ env.cache-name }}-
-
-      - name: List the state of node modules
-        if: ${{ steps.node-modules-cache.outputs.cache-hit != 'true' }}
-        continue-on-error: true
-        run: npm list
-
-      - name: Install dependencies
-        if: ${{ steps.node-modules-cache.outputs.cache-hit != 'true' }}
-        run: npm ci
-
   codecheck:
     name: Run code check
     runs-on: ubuntu-latest
-    needs: [setup]
     steps:
       - name: Checkout branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - name: Retrieve node modules cache
-        id: node-modules-cache
-        uses: actions/cache@v3
-        env:
-          cache-name: node-modules-cache
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
         with:
-          path: node_modules
-          key: ${{ env.cache-name }}-${{ env.HEAD_REF }}-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ env.cache-name }}-${{ env.HEAD_REF }}-${{ runner.os }}-
-            ${{ env.cache-name }}-${{ env.HEAD_REF }}-
-            ${{ env.cache-name }}-
+          run_install: false
 
-      - name: Cache retrieval failure
-        if: ${{ steps.node-modules-cache.outputs.cache-hit != 'true' }}
-        run: |
-          echo "::error file=node_modules::Failed to retrieve the cache"
-          exit 1
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
-      - name: Run codecheck script
-        run: npm run codecheck
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run check script
+        run: pnpm check
+
+      - name: Check published package types
+        run: pnpm check:package
 
   test:
-    name: Test with TypeScript ${{ matrix.typescript }} on Node ${{ matrix.node }}
+    name: Test on Node ${{ matrix.node }}
     runs-on: ubuntu-latest
     needs: [codecheck]
     strategy:
       matrix:
-        node: ['18.x', '20.x', '22.x']
-        typescript: ['4.7.4', 'latest']
+        node: ['22.x', '24.x']
     steps:
       - name: Checkout branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
 
-      - name: Retrieve node modules cache
-        id: node-modules-cache
-        uses: actions/cache@v3
-        env:
-          cache-name: node-modules-cache
-        with:
-          path: node_modules
-          key: ${{ env.cache-name }}-${{ env.HEAD_REF }}-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ env.cache-name }}-${{ env.HEAD_REF }}-${{ runner.os }}-
-            ${{ env.cache-name }}-${{ env.HEAD_REF }}-
-            ${{ env.cache-name }}-
-
-      - name: Cache retrieval failure
-        if: ${{ steps.node-modules-cache.outputs.cache-hit != 'true' }}
-        run: |
-          echo "::error file=node_modules::Failed to retrieve the cache"
-          exit 1
-
-      - name: Install specific TypeScript version
-        run: npm install typescript@${{ matrix.typescript }} --no-save --no-audit
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Run test script
-        run: npm run test
+        run: pnpm test
+
+  e2e:
+    name: Browser E2E
+    runs-on: ubuntu-latest
+    needs: [codecheck]
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        if: ${{ !env.ACT }}
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
+
+      - name: Run browser E2E tests
+        run: pnpm test:e2e
+
+  wasm:
+    name: Rebuild WASM from source
+    runs-on: ubuntu-latest
+    needs: [codecheck]
+    if: ${{ github.actor != 'nektos/act' }}
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Build the WASM toolchain image
+        run: docker build --platform linux/amd64 -t woff2-encoder .
+
+      - name: Rebuild the WASM modules
+        run: docker run --platform linux/amd64 --rm -v "$PWD":/src/woff2-encoder -u "$(id -u):$(id -g)" woff2-encoder make -C /src/woff2-encoder
+
+      - name: Report drift between committed and rebuilt artifacts
+        run: git status --short build/ && git diff --stat build/
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests against the rebuilt WASM modules
+        run: pnpm vitest run
+
+  pack:
+    name: Packed tarball smoke test
+    runs-on: ubuntu-latest
+    needs: [codecheck]
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.x'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Pack the publishable tarball
+        run: npm pack --pack-destination "$RUNNER_TEMP"
+
+      - name: Install the tarball into a clean project and run the exports test
+        run: |
+          SMOKE="$RUNNER_TEMP/smoke"
+          mkdir -p "$SMOKE/tests/e2e"
+          cp -r tests/fixtures "$SMOKE/tests/fixtures"
+          cp tests/e2e/package-exports.mjs "$SMOKE/tests/e2e/"
+          cd "$SMOKE"
+          npm init -y
+          npm install "$RUNNER_TEMP"/woff2-encoder-*.tgz
+          node tests/e2e/package-exports.mjs
 
   test-result:
     name: Test result
     runs-on: ubuntu-latest
-    needs: [test]
+    needs: [test, e2e, wasm, pack]
     if: ${{ always() }}
     steps:
       - name: Check test status
         run: |
-          if [ ${{ needs.test.result }} == 'success' ]; then
-            echo 'All tests passed!'
-            exit 0
-          else
-            echo 'Some tests failed.'
-            exit 1
-          fi
+          for result in '${{ needs.test.result }}' '${{ needs.e2e.result }}' '${{ needs.wasm.result }}' '${{ needs.pack.result }}'; do
+            if [ "$result" != 'success' ] && [ "$result" != 'skipped' ]; then
+              echo 'Some tests failed.'
+              exit 1
+            fi
+          done
+          echo 'All tests passed!'
